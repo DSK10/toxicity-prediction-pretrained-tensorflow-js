@@ -1,0 +1,48 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/toxicity"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script>
+
+
+function f1 () {
+    
+const sentences = document.getElementById("input_1").value;
+document.getElementById("p0").innerText = "Your sentence is = " + sentences;
+document.getElementById("p1").innerText = "";
+
+
+const threshold = 0.9;
+toxicity.load(threshold).then(model => {
+    model.classify(sentences).then(predictions => {
+
+        console.log(predictions);
+        for(i=0; i<7; i++){
+            if(predictions[i].results[0].match){
+                console.log(predictions[i].label + 
+                            " was found with probability of " + 
+                            predictions[i].results[0].probabilities[1]);
+                document.getElementById("p1").innerText =  predictions[i].label + 
+                            " was found with probability of " + 
+                            predictions[i].results[0].probabilities[1];
+            }  else {
+                document.getElementById("p1").innerText = "No toxicity found";
+            }
+        }
+    });
+});
+
+}
+</script> 
+</head>
+<body>
+    <div class="container-fluid">
+    <h1>Are these words toxic? lets find out</h1>
+    <input id="input_1" type="text">
+    <button type="submit" onclick="f1()"> submit </button>
+    <p id="p0"></p>
+    <p id="p1"></p>
+    </div>
+</body>
+</html>    
